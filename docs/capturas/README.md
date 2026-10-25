@@ -4,6 +4,7 @@ Capturas tomadas con Marionette en un emulador Android (Pixel 8, API 35), con la
 
 | Captura | Paso | Qué muestra | Requisito |
 |---|---|---|---|
+| [00-cargando.png](00-cargando.png) | 8 (al tocar "Reintentar") | Estado de carga: indicador "Cargando…" mientras llega la lista | 4 |
 | [01-lista.png](01-lista.png) | 1 | Lista de usuarios con nombre, correo y empresa (`company.name`) | 1 |
 | [02-detalle.png](02-detalle.png) | 2 | Detalle de un usuario con sus publicaciones (`/posts?userId=1`) | 2 |
 | [03-favoritos.png](03-favoritos.png) | 3 | Dos usuarios marcados como favoritos, el más reciente primero | 3 |
