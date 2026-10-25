@@ -1,7 +1,17 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:marionette_flutter/marionette_flutter.dart';
 
 void main() {
-  runApp(const MyApp());
+  if (kDebugMode) {
+    MarionetteBinding.ensureInitialized();
+  } else {
+    WidgetsFlutterBinding.ensureInitialized();
+  }
+  const app = MyApp();
+  // Lets Marionette override theme and text scale during visual checks.
+  // Same condition as MarionetteBinding above, so profile builds stay clean.
+  runApp(kDebugMode ? const MarionetteDeviceConfig(child: app) : app);
 }
 
 class MyApp extends StatelessWidget {
