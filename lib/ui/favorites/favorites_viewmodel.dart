@@ -17,6 +17,8 @@ class FavoritesViewModel extends ChangeNotifier with SafeNotifier {
   UiState<List<User>> _state = const Loading();
   UiState<List<User>> get state => _state;
 
+  ValueListenable<Set<int>> get favoriteIds => _repo.favoriteIds;
+
   int _generation = 0;
 
   Future<void> load() async {

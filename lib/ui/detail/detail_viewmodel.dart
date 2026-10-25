@@ -18,6 +18,8 @@ class DetailViewModel extends ChangeNotifier with SafeNotifier {
   UiState<List<Post>> _postsState = const Loading();
   UiState<List<Post>> get postsState => _postsState;
 
+  ValueListenable<Set<int>> get favoriteIds => _repo.favoriteIds;
+
   bool get isFavorite => _repo.favoriteIds.value.contains(user.id);
 
   int _generation = 0;
