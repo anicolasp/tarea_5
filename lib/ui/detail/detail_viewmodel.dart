@@ -35,6 +35,23 @@ class DetailViewModel extends ChangeNotifier with SafeNotifier {
     notifyListeners();
   }
 
+  /// Reintento silencioso al volver a la app: solo si las publicaciones
+  /// fallaron, y sin pasar por [Loading] (el mensaje sigue visible hasta que
+  /// llega el resultado). Devuelve si reintentó.
+  bool retryPostsIfFailed() {
+    if (_postsState is! Offline && _postsState is! Failure) return false;
+    _retryQuietly();
+    return true;
+  }
+
+  Future<void> _retryQuietly() async {
+    final generation = ++_generation;
+    final next = await fetchState(() => _repo.fetchPosts(user.id));
+    if (generation != _generation) return;
+    _postsState = next;
+    notifyListeners();
+  }
+
   /// Devuelve si quedó como favorito, o `null` si no se pudo guardar.
   Future<bool?> toggleFavorite() =>
       safeToggle(() => _repo.toggleFavorite(user));

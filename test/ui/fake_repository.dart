@@ -34,6 +34,7 @@ class FakeRepository implements UserRepository {
 
   final saved = <int, User>{};
   int fetchUsersCalls = 0;
+  int fetchPostsCalls = 0;
 
   @override
   final favoriteIds = ValueNotifier<Set<int>>(const {});
@@ -52,6 +53,7 @@ class FakeRepository implements UserRepository {
 
   @override
   Future<List<Post>> fetchPosts(int userId) async {
+    fetchPostsCalls++;
     final result = postsResult;
     if (result is List<Post>) return result;
     throw result;

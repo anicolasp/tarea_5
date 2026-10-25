@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/models/post.dart';
 import '../../data/models/user.dart';
 import '../../data/user_repository.dart';
+import '../retry_on_resume.dart';
 import '../ui_state.dart';
 import '../widgets/state_views.dart';
 import '../widgets/user_tile.dart';
@@ -33,18 +34,28 @@ class UserDetailScreen extends StatefulWidget {
   State<UserDetailScreen> createState() => _UserDetailScreenState();
 }
 
-class _UserDetailScreenState extends State<UserDetailScreen> {
+class _UserDetailScreenState extends State<UserDetailScreen>
+    with WidgetsBindingObserver, RetryOnResume<UserDetailScreen> {
   late final DetailViewModel _vm;
+
+  @override
+  String get lifecycleTag => 'UserDetailScreen';
 
   @override
   void initState() {
     super.initState();
+    // Carga las publicaciones al abrir el detalle (≈ onCreate).
     _vm = DetailViewModel(widget.repo, widget.user);
     _vm.loadPosts();
   }
 
+  /// ≈ onResume: reintenta las publicaciones solo si fallaron.
+  @override
+  bool retryIfFailed() => _vm.retryPostsIfFailed();
+
   @override
   void dispose() {
+    // ≈ onDestroy: libera el ViewModel; RetryOnResume quita el observador.
     _vm.dispose();
     super.dispose();
   }

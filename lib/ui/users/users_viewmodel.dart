@@ -25,6 +25,23 @@ class UsersViewModel extends ChangeNotifier with SafeNotifier {
   /// Recarga sin ocultar los datos que ya se ven.
   Future<void> refresh() => _fetch(showLoading: _state is! Success);
 
+  /// Reintento silencioso al volver a la app: solo si la última carga falló,
+  /// y sin pasar por [Loading] (el mensaje sigue visible hasta que llega el
+  /// resultado). Devuelve si reintentó.
+  bool retryIfFailed() {
+    if (_state is! Offline && _state is! Failure) return false;
+    _retryQuietly();
+    return true;
+  }
+
+  Future<void> _retryQuietly() async {
+    final generation = ++_generation;
+    final next = await fetchState(_repo.fetchUsers);
+    if (generation != _generation) return;
+    _state = next;
+    notifyListeners();
+  }
+
   /// Motivo del último [refresh] fallido mientras había datos visibles, o
   /// `null`. Se borra al leerlo, para que la pantalla muestre el SnackBar
   /// una sola vez.
