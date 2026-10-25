@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Requisito 5: la app consume la API REST de JSONPlaceholder. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="tarea_5"
+        android:label="Directorio"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
