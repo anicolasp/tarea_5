@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/user_repository.dart';
 import '../detail/user_detail_screen.dart';
+import '../retry_on_resume.dart';
 import '../ui_state.dart';
 import '../widgets/state_views.dart';
 import '../widgets/user_tile.dart';
@@ -17,8 +18,12 @@ class UsersScreen extends StatefulWidget {
   State<UsersScreen> createState() => _UsersScreenState();
 }
 
-class _UsersScreenState extends State<UsersScreen> {
+class _UsersScreenState extends State<UsersScreen>
+    with WidgetsBindingObserver, RetryOnResume<UsersScreen> {
   late final UsersViewModel _vm;
+
+  @override
+  String get lifecycleTag => 'UsersScreen';
 
   @override
   void initState() {
@@ -28,9 +33,15 @@ class _UsersScreenState extends State<UsersScreen> {
     _vm.load();
   }
 
+  /// ≈ onResume: si la última carga falló (p. ej. sin red), se reintenta
+  /// sola; si ya hay datos, no se recarga.
+  @override
+  bool retryIfFailed() => _vm.retryIfFailed();
+
   @override
   void dispose() {
-    // Libera el ViewModel (≈ onDestroy / onCleared en Android).
+    // ≈ onDestroy / onCleared: libera el ViewModel; RetryOnResume quita el
+    // observador del ciclo de vida.
     _vm.dispose();
     super.dispose();
   }
